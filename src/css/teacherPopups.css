@@ -1,0 +1,8 @@
+.popup-background {
+   background-color: rgba(120,120,120,0.7);
+   position: absolute;
+   inset: 0;
+}
+.popup-background > div{
+   background-color: #fff;
+}

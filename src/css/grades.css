@@ -1,0 +1,6 @@
+.addGrade > img {
+   display: none;
+}
+.addGrade:hover > img {
+   display: block;
+}

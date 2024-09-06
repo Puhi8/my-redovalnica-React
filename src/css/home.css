@@ -1,0 +1,111 @@
+p{
+   width: fit-content;
+}
+.Home-main.Computer{
+   display: flex;
+   justify-content: space-between;
+}
+
+
+.Home-grades-div{
+   height: fit-content;
+}
+.Home-grades-table > tr > th{
+   color: #000;
+}
+.Home-grades-table{
+   width: 70vw;
+   height: 30vh;
+   font-family: Rubik;
+   min-width: 820px;
+}
+.Home-table-grade{
+   font-size: 1.13em;
+   width: fit-content;
+   height: fit-content;
+   display: inline;
+   margin-right: 7px;
+}
+.Home-table-gradeFixed{
+   font-size: 0.92em;
+   font-weight: normal;
+}
+.Home-grades-table > tr > td{
+   border: solid #000;
+   max-width: 3vw;
+   height: 50%;
+   overflow-wrap:break-word;
+   overflow: visible;
+   padding: 3px;
+   vertical-align: top;
+   text-align: left;
+   font-weight: bold;
+}
+
+
+.Home-grades-table.Mobile{
+   min-width: auto;
+   width: 100%;
+   font-family: Rubik;
+   margin-top: 20px;
+}
+.Home-grades-table.Mobile > tr{
+   height: 40px;
+   width: 100%;
+   font-size: 1.3em;
+}
+.Home-grades-table.Mobile > tr > th{
+   width: 10%;
+}
+.Home-grades-table.Mobile > tr > td{
+   height: auto;
+   min-width: none;
+}
+.Home-table-gradeFixed.Mobile{
+   font-size: 0.8em;
+}
+
+.gradeType-written{
+   color: #04f;
+}
+.gradeType-writtenFixed{
+   color: #00f;
+}
+.gradeType-talk{
+   color: #7f0;
+}
+.gradeType-talkFixed{
+   color: #060;
+}
+
+/*-------------------------------------dates---------------------------*/
+
+.Home-dates-div{
+   display: flex;
+   flex-direction: column;
+   margin-top: 20px;
+   color: #000;
+   font-size: 1.2em;
+   background-color: #9a6;
+   border-radius: 20px;
+   padding: 10px;
+}
+.Home-dates-div > div{
+   height: fit-content;
+   width: 50%;
+   padding: 5px;
+   margin: auto;
+   margin-bottom: 5px;
+   border: #000 solid;
+   border-radius: 7px;
+}
+.Home-dates-div > div >p{
+   margin: auto;
+}
+.Home-dates-div.Computer{
+   width: 20vw;
+   overflow: hidden;
+}
+.Home-dates-div.Computer > div{
+   width: 80%;
+}

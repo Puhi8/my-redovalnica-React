@@ -1,6 +1,9 @@
-.addGrade > img {
+.add > img {
    display: none;
 }
-.addGrade:hover > img {
+.add:hover > img {
    display: block;
+}
+.individualClassRow > td {
+   background-color: #e6e6e6;
 }

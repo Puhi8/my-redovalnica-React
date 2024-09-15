@@ -1,22 +1,23 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react"
+import { useState } from "react"
 import { anyPercentToString, anyPercentToNumber,convertMyDatesToUsableDates } from "../../functions/_generalFunctions"
 
 export default function GradesPopup_Grade({ myClass, index, myClassData, closePopupFunction, changeNewData }) {
    let currantGrade = myClassData.grades[index]
    const [displayAboutTest, setDisplayAboutTest] = useState(false)
    const [displayAboutTestFixed, setDisplayAboutTestFixed] = useState(false)
+   const [displayFixedGrade, setDisplayFixedGrade] = useState(currantGrade.wasFixed)
    const [editMode, setEditMode] = useState(false)
 
    return <div onClick={(e) => e.stopPropagation()}>
       <nav>
-         <h3>{myClass} ({currantGrade.grade}{currantGrade.wasFixed ? ` => ${currantGrade.gradeFixed}` : ""})</h3>
+         <h3>{myClass} ({currantGrade.grade}{displayFixedGrade ? ` => ${currantGrade.gradeFixed}` : ""})</h3>
+         <button onClick={() => closePopupFunction(true)}><img src="./img/close.png" width={"50px"} /></button>
          <button onClick={() => { setEditMode(!editMode) }}>Edit</button>
-         <button onClick={() => closePopupFunction(true)}><img src="../src/img/close.png" width={"50px"} /></button>
-         {editMode && <button onClick={() => closePopupFunction(false, myClass, "grades", index)}><img src="../src/img/checkmark-green.png" width={"50px"} /></button>}
+         {editMode && <button onClick={() => closePopupFunction(false, myClass, "grades", index)}><img src="./img/checkmark-green.png" width={"50px"} /></button>}
       </nav>
       {editMode
-      ? <>{currantGrade.wasFixed && <div>
+      ? <>{displayFixedGrade && <div>
          <h4>Fixed grade ({currantGrade.gradeFixed})</h4>
          <label htmlFor="gradeFixed">Grade: </label>
          <input 
@@ -26,6 +27,7 @@ export default function GradesPopup_Grade({ myClass, index, myClassData, closePo
             type="number" 
             min={1} 
             max={5}
+            onClick={(e)=>{changeNewData(e, myClass, "grades", index)}} 
          />
          <div>
             <label>Type:</label>
@@ -180,10 +182,15 @@ export default function GradesPopup_Grade({ myClass, index, myClassData, closePo
             />
          </>}
       </div>
-      <button name="deleteAll" onClick={(e)=>{changeNewData(e, myClass, "grades", index)}}>{currantGrade.wasFixed ?"Del all" :"Del"}</button>
-      {currantGrade.wasFixed ?<button>Del fixed</button> :<button>Fixe</button>}
+      <button name="deleteAll" onClick={(e)=>{changeNewData(e, myClass, "grades", index)}}>{displayFixedGrade ?"Del all" :"Del"}</button>
+      {displayFixedGrade 
+      ?<button name="deleteFixeGrade" onClick={(e)=> changeNewData(e, myClass, "grades", index)}>Del fixed</button> 
+      :<button name="fixeGrade" onClick={(e)=>{
+         changeNewData(e, myClass, "grades", index)
+         setDisplayFixedGrade(!displayFixedGrade)
+      }}>Fixe</button>}
       </>
-      : <>{currantGrade.wasFixed && <div>
+      : <>{displayFixedGrade && <div>
          <h4>Fixed grade ({currantGrade.gradeFixed})</h4>
          <p>Type: {currantGrade.typeFixed}</p>
          <p>Date: {currantGrade.dateFixed}</p>

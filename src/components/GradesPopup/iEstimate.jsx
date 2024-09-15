@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, {useState} from "react"
+import React from "react"
 
 export default function GradesPopup_iEstimate({myClass, myClassData, changeNewData}) {
    return <div onClick={(e) => e.stopPropagation()}>
@@ -13,6 +13,8 @@ export default function GradesPopup_iEstimate({myClass, myClassData, changeNewDa
          type="number" 
          name="iEstimate" 
          id="iEstimate" 
+         max={5}
+         min={1}
          defaultValue={myClassData.iEstimate}
          onChange={(e)=>changeNewData(e, myClass)}
       />

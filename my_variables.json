@@ -1,0 +1,6 @@
+{
+   "API": "http://localhost:9999/api",
+   "API_grades": "http://localhost:9999/api/grades",
+   "API_dates": "http://localhost:9999/api/dates",
+   "API_allClasses": "http://localhost:9999/api/allClasses"
+}

@@ -89,10 +89,11 @@ function convertIndividualTeacherObjectToTeacherData(teacherObject) {
    //set "name"
    teacherData = {...teacherData, "name": teacherObject.name}
    //set "homework"
-   if (teacherObject.homeworkState !== "none") {
+   if (teacherObject.homeworkState != "none") {
       if (teacherObject.homeworkState == "roundUp")teacherData={...teacherData, "countsHomework": `roundUp:${teacherObject.homeworkNumber}`}
       else teacherData = {...teacherData, "countsHomework": `${teacherObject.homeworkGrade}:${teacherObject.homeworkNumber}`}
    }
+   else teacherData = {...teacherData, "countsHomework": false}
    //set "percent" and "ignoring fixed"
    teacherData={
       ...teacherData,
@@ -100,18 +101,20 @@ function convertIndividualTeacherObjectToTeacherData(teacherObject) {
       "ignoresFixedGrades": (teacherObject.ignoreState == "true" || teacherObject.ignoreState == true)
    }
    //set small "grades"
-   if (teacherObject.smallGradeState !== "none") {
+   if (teacherObject.smallGradeState != "none") {
       if (teacherObject.smallGradeState == "round") teacherData = {...teacherData, "convertSmallGrades": true}
       else teacherData={...teacherData, "convertSmallGrades": teacherObject.smallGradeConvertNumber}
    }
+   else teacherData = {...teacherData, "convertSmallGrades": false}
    //set "pluses and minuses"
-   if (teacherObject.plus_minusState !== "none") {
+   if (teacherObject.plus_minusState != "none") {
       if (teacherObject.plus_minusState == "plus" || teacherObject.plus_minusState == "minus") {
          let type = teacherObject.plus_minusState
          teacherData = {...teacherData, "convertPluses": `${type}:${teacherObject[`${type}Grade`]}:${teacherObject[`${type}Number`]}`}
       }
       else teacherData={...teacherData, "convertPluses": `plus:${teacherObject.plusGrade}:${teacherObject.plusNumber}/minus:${teacherObject.minusGrade}:${teacherObject.minusNumber}`}
    }
+   else teacherData = {...teacherData, "convertPluses": false}
    return teacherData
 }
 

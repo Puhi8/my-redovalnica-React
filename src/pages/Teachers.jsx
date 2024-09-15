@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react"
 import Teachers_tableRow from "../components/Teachers-tableRow"
 import { convertTeacherDataToTeacherObject, convertIndividualTeacherObjectToTeacherData } from "../functions/convertTeacherData"
-import createSendFile from "../functions/createSendFile"
+import {createSendFile, make_a_deep_copy} from "../functions/_generalFunctions"
+import {API_grades, API_allClasses} from "../../my_variables.json"
 import TeacherPopup_name from "../components/TeacherPopup/name"
 import TeacherPopup_homework from "../components/TeacherPopup/homework"
 import TeacherPopup_percent from "../components/TeacherPopup/percent"
@@ -36,8 +37,8 @@ export default function Teachers() {
 
    useEffect(() => {
       Promise.all([
-         fetch(import.meta.env.VITE_API_allClasses).then(res => res.json()),
-         fetch(import.meta.env.VITE_API_grades).then(res => res.json())
+         fetch(API_allClasses).then(res => res.json()),
+         fetch(API_grades).then(res => res.json())
       ])
          .then(([allClassesData, allData]) => {
             const teacherObject = convertTeacherDataToTeacherObject(allData, allClassesData)
@@ -70,14 +71,19 @@ export default function Teachers() {
    }, [displayPopup])
 
    function sendTeacherObject(newTeacherObject, myClass) {
+      //_console.log("new teacher object before: ", (newTeacherObject));
+      //_console.log("new teacher object after: ", convertIndividualTeacherObjectToTeacherData(newTeacherObject));
+      
       let dataToSend = createSendFile(myClass, "grades", "teacher", convertIndividualTeacherObjectToTeacherData(newTeacherObject))
-      fetch(import.meta.env.VITE_API_grades, {
+      console.log("sending: ", dataToSend);
+      
+      fetch(API_grades, {
          method: "POST",
          headers: { "Content-type": "application/json; charset=UTF-8" },
          body: JSON.stringify(dataToSend),
       })
-      //_.then((response) => response.json())
-      //_.then((json) => console.log(json))
+      .then((response) => response.json())
+      .then((json) => console.log(json))
    }
 
    function closePopup() {

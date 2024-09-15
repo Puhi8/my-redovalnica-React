@@ -15,19 +15,19 @@ export default function Grades_tableRow({ allClassData, myClass, popupFunction }
    if (!teacherNameText) teacherNameText = "No name"
    classRow.push(<td><Link to="/teachers">{teacherNameText}</Link></td>)
    //plus / minus
-   let plusMinusIndex = 0
    let allPlusesMinuses
-   if (allClassData.plus_minus.length == 0) allPlusesMinuses = 0
+   if (allClassData.plus_minus.length == 0) allPlusesMinuses = ""
    else {
-      allPlusesMinuses = allClassData.plus_minus.map(element => {
-         let htmlToSend = <button name={`plus_minus-${myClass}`} onClick={(e) => { popupFunction(e, plusMinusIndex) }}>{(element.type == "plus") ? "+" : "-"}</button>
-         plusMinusIndex++
+      allPlusesMinuses = allClassData.plus_minus.map((element, index) => {
+         let htmlToSend = <button name={`plus_minus-${myClass}`} onClick={(e) => { popupFunction(e, index) }}>{(element.type == "plus") ? "+" : "-"}</button>
          return htmlToSend
       })
    }
-   classRow.push(<td>{allPlusesMinuses}</td>)
+   classRow.push(<td className="add plus_minus" style={{ maxWidth: "170px" }}>
+      {allPlusesMinuses}<img name={`newPlus_minus-${myClass}`} className="add plus_minus" width={"20px"} src="./img/plus-green.png" onClick={(e) => popupFunction(e, 0)} />
+   </td>)
    //homework
-   classRow.push(<td>{allClassData.homework.length}</td>)
+   classRow.push(<td><button name={`homework-${myClass}`} onClick={(e)=>popupFunction(e)}>{allClassData.homework.length}</button></td>)
    //grades
    let hasFixingToDo = false
    let gradesIndex = 0
@@ -36,34 +36,33 @@ export default function Grades_tableRow({ allClassData, myClass, popupFunction }
    allClassData.grades.forEach(individualGrade => {
       if (individualGrade.grade == 1 && (!individualGrade.wasFixed || individualGrade.gradeFixed == 1)) hasFixingToDo = true
       let newIndex = gradesIndex
-      let htmlToReturn = <button name={`grades-${myClass}`} onClick={(e) => { popupFunction(e, newIndex) }}>
+      let htmlToReturn = <button name={`grades-${myClass}`} onClick={(e) => popupFunction(e, newIndex)}>
          {individualGrade.wasFixed ? <>{individualGrade.gradeFixed}<b style={{ fontSize: "8px" }} onClick={(e) => { e.target = e.target.parentNode; popupFunction(e, newIndex) }}>{individualGrade.grade}</b></> : individualGrade.grade}
       </button>
       gradesIndex++
       individualGrade.isSecondHalf ? all2Grades.push(htmlToReturn) : all1Grades.push(htmlToReturn)
    })
-   classRow.push(<td className="addGrade" style={{ maxWidth: "170px" }}>
-      {all1Grades}<img name={`newGrade-${myClass}`} className="addGrade" width={"20px"} src="../src/img/plus-green.png" onClick={(e) => popupFunction(e)} />
+   classRow.push(<td className="add Grade" style={{ maxWidth: "170px" }}>
+      {all1Grades}<img name={`newGrade-${myClass}`} className="add Grade" width={"20px"} src="./img/plus-green.png" onClick={(e) => popupFunction(e, 0)} />
    </td>)
-   classRow.push(<td className="addGrade" style={{ maxWidth: "170px" }}>
-      {all2Grades}<img name={`newGrade-${myClass}`} className="addGrade" width={"20px"} src="../src/img/plus-green.png" onClick={(e) => popupFunction(e)} />
+   classRow.push(<td className="add Grade" style={{ maxWidth: "170px" }}>
+      {all2Grades}<img name={`newGrade-${myClass}`} className="add Grade" width={"20px"} src="./img/plus-green.png" onClick={(e) => popupFunction(e, 0)} />
    </td>)
    //small grades
+   let allSmallGradesHtml = []
    if (allClassData.smallGrade.length == 0) {
-      classRow.push(<td>No small grades</td>)
+      allSmallGradesHtml.push(<td></td>)
    }
    else {
-      let allSmallGradesHtml = []
-      let smallGradesIndex = 0
-      allClassData.smallGrade.forEach(smallGrade => {
-         let newIndex = smallGradesIndex
-         allSmallGradesHtml.push(<button name={`smallGrades-${myClass}`} onClick={(e) => { popupFunction(e, newIndex) }}>{smallGrade.grade}</button>)
-         smallGradesIndex++
+      allClassData.smallGrade.forEach((smallGrade, index) => {
+         allSmallGradesHtml.push(<button name={`smallGrade-${myClass}`} onClick={(e) => { popupFunction(e, index) }}>{smallGrade.grade}</button>)
       })
-      classRow.push(<td>{allSmallGradesHtml}</td>)
    }
+   classRow.push(<td className="add smallGrade" >
+      {allSmallGradesHtml}<img name={`newSmallGrade-${myClass}`} className="add smallGrade" width={"20px"} src="./img/plus-green.png" onClick={(e) => popupFunction(e, 0)}/>
+   </td>)
    //fixing
-   classRow.push(<td><img style={{ width: "50px" }} src={`../src/img/${hasFixingToDo ? "close-red" : "checkmark-green"}.png`} /></td>)
+   classRow.push(<td><img style={{ width: "50px" }} src={`./img/${hasFixingToDo ? "close-red" : "checkmark-green"}.png`} /></td>)
    //final grades
    let finalGradeAutoText = endGrade(allClassData)
    let estimation = allClassData.iEstimate
@@ -73,5 +72,5 @@ export default function Grades_tableRow({ allClassData, myClass, popupFunction }
    </td>)
    //FINAL GRADE
    classRow.push(<td><button onClick={popupFunction} name={`endedGrade-${myClass}`}>{!allClassData.endedGrade ? "Not finished" : allClassData.endedGrade}</button></td>)
-   return <tr>{classRow}</tr>
+   return <tr className="individualClassRow">{classRow}</tr>
 }

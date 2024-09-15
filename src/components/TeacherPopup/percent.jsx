@@ -6,7 +6,7 @@ export default function TeacherPopup_percent({ aboutTeacher, myClass, changeTeac
    return <div className="teacherPopup-percent" onClick={(e) => e.stopPropagation()}>
       <nav>
          <h3>End by percent ({myClass})</h3>
-         <button onClick={closePopupFunction}><img src="./src/img/close.png" width={"50px"} /></button>
+         <button onClick={closePopupFunction}><img src="./img/close.png" width={"50px"} /></button>
       </nav>
       <div>
          <input

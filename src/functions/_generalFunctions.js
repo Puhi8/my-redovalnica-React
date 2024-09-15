@@ -26,6 +26,22 @@ function convertUsableDatesToMyDates(usableDate){
    let [y,m,d] = usableDate.split("-")
    return `${d}.${m}.${y}`
 }
+function checkIfDateIsInSecondHalf(date) {
+   let [d, m, y] = date.split(".")
+   if ((m > 1 || d > 15) && m < 8) return true
+   else return false
+}
+function make_a_deep_copy(item) {
+   return JSON.parse(JSON.stringify(item))
+}
+function createSendFile(myClass, file, type, data){
+   return {
+      "class":myClass,
+      "file":file,
+      "type":type,
+      "data": data
+   }
+}
 
 export {
    anyPercentToNumber,
@@ -33,4 +49,7 @@ export {
    sortArrayByDate,
    convertMyDatesToUsableDates,
    convertUsableDatesToMyDates,
+   make_a_deep_copy,
+   createSendFile,
+   checkIfDateIsInSecondHalf,
 }

@@ -6,6 +6,7 @@ import React from "react"
 import Home_GradesTable_desktop from "./Home-gradesTable-desktop"
 import Home_GradesTable_mobile from "./Home-gradesTable-mobile"
 import { Link } from "react-router-dom"
+import {API_grades, API_allClasses} from "../../my_variables.json"
 export default function Home_Grades({ isMobile }) {
    let device = isMobile ? "Mobile" : "Computer"
    const [endOfYear, setEndOfYear] = React.useState(false)
@@ -13,8 +14,8 @@ export default function Home_Grades({ isMobile }) {
    const [gradesData, setGradesData] = React.useState({})
    React.useEffect(() => {
       Promise.all([
-         fetch(import.meta.env.VITE_API_allClasses).then(res => res.json()),
-         fetch(import.meta.env.VITE_API_grades).then(res => res.json())
+         fetch(API_allClasses).then(res => res.json()),
+         fetch(API_grades).then(res => res.json())
       ])
       .then(([allClassesData, allData]) => {
          setAllClasses(allClassesData);

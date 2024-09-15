@@ -5,7 +5,7 @@ export default function TeacherPopup_ignoreFixedGrades({ aboutTeacher, myClass, 
    return <div className="teacherPopup-ignoreFixedGrades" onClick={(e) => e.stopPropagation()}>
       <nav>
          <h3>Ignore fixed grades ({myClass})</h3>
-         <button onClick={closePopupFunction}><img src="./src/img/close.png" width={"50px"} /></button>
+         <button onClick={closePopupFunction}><img src="./img/close.png" width={"50px"} /></button>
       </nav>
       <div>
          <input

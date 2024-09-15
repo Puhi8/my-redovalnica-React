@@ -6,7 +6,7 @@ export default function GradesPopup_newGrade({ myClass, closePopupFunction, addN
    const [allPoints, setAllPoints] = useState(100)
    const [getPoints, setGetPoints] = useState()
    useEffect(()=>{
-      addNewItem()
+      addNewItem(0,0,0,"grade")
    },[])
 
    useEffect(()=>{
@@ -19,8 +19,8 @@ export default function GradesPopup_newGrade({ myClass, closePopupFunction, addN
 
    return (<div onClick={(e) => e.stopPropagation()}>
       <nav>
-      <h3>Add</h3>
-      <button onClick={()=>{closePopupFunction(true)}}><img src="../src/img/close.png" width={"50px"}/></button>
+         <h3>Add grade ({myClass})</h3>
+         <button onClick={()=>{closePopupFunction(true)}}><img src="./img/close.png" width={"50px"}/></button>
       </nav>
       <label htmlFor="effect">Effect:</label>
       <input
@@ -93,6 +93,6 @@ export default function GradesPopup_newGrade({ myClass, closePopupFunction, addN
             onChange={(e)=>{addNewItem(e, myClass, "grades")}}
          />
       </div>}
-      <button name="addNewGrade" onClick={(e)=>{if(e.target.nodeName == "IMG") e.target = e.target.parentNode; addNewItem(e, myClass, "grades")}}><img src="../src/img/checkmark-green.png" width={"50px"}/></button>
+      <button name="addNewGrade" onClick={(e)=>{if(e.target.nodeName == "IMG") e.target = e.target.parentNode; addNewItem(e, myClass, "grades")}}><img src="./img/checkmark-green.png" width={"50px"}/></button>
    </div>)
 }

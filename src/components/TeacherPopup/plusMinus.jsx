@@ -91,7 +91,7 @@ export default function TeacherPopup_plusMinus({ aboutTeacher, myClass, changeTe
    return <div className="teacherPopup-plusMinus" onClick={(e) => e.stopPropagation()}>
       <nav>
          <h3>Plus / Minus ({myClass})</h3>
-         <button onClick={closePopupFunction}><img src="./src/img/close.png" width={"50px"}/></button>
+         <button onClick={closePopupFunction}><img src="./img/close.png" width={"50px"}/></button>
       </nav>
       <div>
          <input

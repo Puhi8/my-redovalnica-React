@@ -1,9 +1,53 @@
-.add > img {
+.add>img {
    display: none;
 }
-.add:hover > img {
+
+.add:hover>img {
    display: block;
 }
-.individualClassRow > td {
+
+/* .individualClassRow>td {
    background-color: #e6e6e6;
+} */
+
+.add.Mobile>img {
+   display: block;
+}
+
+.mainGradesTable {
+   width: 100%;
+}
+th{
+   width: 100px;
+}
+td{
+   text-align: center;
+   background-color: rgb(219, 219, 219);
+}
+.grades-Class{
+   width: 5%;
+}
+.grades-Name{
+   width: 1%;
+}
+.grades-PlusMinus{
+   width: 10%;
+}
+.grades-Homework{
+   width: 1%;
+}
+.grades-Grades{
+   width: 40%;
+}
+.grades-SmallGrades{
+   width: 10%;
+}
+.grades-Fixing{
+   width: 3%;
+}
+.grades-FinalGrades{
+   width: 10%;
+}
+.grades-endedGrade{
+   width: 5%;
 }

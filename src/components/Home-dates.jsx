@@ -3,7 +3,7 @@
 import  {useEffect, useState} from "react"
 import { Link } from "react-router-dom"
 import {sortArrayByDate} from "../functions/_generalFunctions"
-import {API_dates} from "../../my_variables.json"
+const API_dates = import.meta.env.VITE_API_dates
 let eventTitleMap = new Map([
    ["written", "test"],
    ["writtenFixed", "test popravljanje"],

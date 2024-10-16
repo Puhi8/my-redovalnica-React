@@ -5,7 +5,8 @@ import "./css/index.css"
 import './css/navbar.css'
 import './css/home.css'
 import './css/teacherPopups.css'
-import './css/grades.css'
+//import './css/grades.css'
+import './css/settings.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

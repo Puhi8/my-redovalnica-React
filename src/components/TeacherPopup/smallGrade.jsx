@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 
 export default function TeacherPopup_smallGrades({ aboutTeacher, myClass, changeTeacherObject, closePopupFunction }) {
    const [smallGradeState, setSmallGradeState] = useState(aboutTeacher.smallGradeState)
@@ -49,10 +50,20 @@ export default function TeacherPopup_smallGrades({ aboutTeacher, myClass, change
          <label htmlFor="smallGradesConvertNumber">Number:</label>
          <input
             type="number"
+            id="smallGradesConvertNumber"
             name="smallGradeConvertNumber"
             defaultValue={aboutTeacher.smallGradeConvertNumber || 3}
-            id="smallGradesConvertNumber"
             onChange={(e) => { changeTeacherObject(e, myClass) }}
+         />
+         <input
+            type="number"
+            id="smallGradeConvertEffect"
+            name="smallGradeConvertEffect"
+            defaultValue={aboutTeacher.smallGradeConvertEffect * 100 || 100}
+            max={100}
+            min={1}
+            onChange={(e) => { changeTeacherObject(e, myClass) }}
+            placeholder="In %"
          />
       </>}
    </div>

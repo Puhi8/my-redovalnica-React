@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-case-declarations */
 /* eslint-disable react/jsx-key */
+import "../css/grades.css"
 import React, { useEffect, useState, useRef } from "react"; React
 import { convertUsableDatesToMyDates, make_a_deep_copy, createSendFile, checkIfDateIsInSecondHalf } from "../functions/_generalFunctions"
-import {API_grades, API_allClasses} from "../../my_variables.json"
 import Grades_tableRow from "../components/Grades-tableRow"
 import GradesPopup_plusMinus from "../components/GradesPopup/Plus-minus"
 import GradesPopup_newPlusMinus from "../components/GradesPopup/NewPlus_minus"
@@ -14,12 +15,10 @@ import GradesPopup_smallGrade from "../components/GradesPopup/SmallGrade"
 import GradesPopup_newSmallGrade from "../components/GradesPopup/NewSmallGrade"
 import GradesPopup_iEstimate from "../components/GradesPopup/iEstimate"
 import GradesPopup_endedGrade from "../components/GradesPopup/endedGrade"
+const API_grades = import.meta.env.VITE_API_grades
+const API_allClasses = import.meta.env.VITE_API_allClasses
 
-function log(object, line) {
-   console.log("line: ", line, make_a_deep_copy(object))
-}
-
-export default function Grades() {
+export default function Grades({isMobile, settings}) {
    function popupRouter(myClass, popupName, index, allData) {
       const componentMapping = {
          "plus_minus": GradesPopup_plusMinus,
@@ -54,15 +53,16 @@ export default function Grades() {
    const singleDataElements = ["iEstimate", "endedGrade"]
    const aboutTestNeededArrays = ["grades", "smallGrade"]
    const itemsToDeleteWhenDeletingFixedGrade = ["gradeFixed", "gradeExtraFixed", "typeFixed", "dateFixed", "aboutTestFixed"]
+   const gradesRelevantSettings = settings[`display${isMobile ? "Mobile" : "Desktop"}`].displayGrades
    useEffect(() => {
       Promise.all([
          fetch(API_allClasses).then(res => res.json()),
-         fetch(API_grades).then(res => res.json())
+         fetch(API_grades).then(res => res.json()),
       ])
-         .then(([allClassesData, allData]) => {
+         .then(([allClassesData, allData, settings]) => {
             setAllClasses(allClassesData)
             setAllData(allData)
-            newAllData.current = JSON.parse(JSON.stringify(allData))
+            newAllData.current = make_a_deep_copy(allData)
          })
    }, [])
 
@@ -80,7 +80,12 @@ export default function Grades() {
       makePopupElement(myClass, name, index)
    }
    function makePopupElement(myClass, name, index){
-      setPopupElement(<div className="popup-background" onClick={() => closePopup(false, myClass, name, index)}>
+      const arrayForAddingItems = new Map([
+         ["newGrade", "grades"],
+         ["newPlus_minus", "plus_minus"],
+         ["newSmallGrade", "smallGrade"]
+      ])
+      setPopupElement(<div className="popup-background" onClick={() => name.includes("new") ? addNewItem({target:{name:"addNew"}}, myClass, arrayForAddingItems.get(name)):closePopup(false, myClass, name, index)}>
             {popupRouter(myClass, name, index, newAllData.current)}
       </div>)
    }
@@ -164,7 +169,6 @@ export default function Grades() {
             if (compareOldWithNewData(allData[myClass][arrayName][index], newAllData.current[myClass][arrayName][index])/* && confirm("Do you want to save changes?")*/) {
                let dataToSend
                let typeOfSendFile
-               //todo: check the "wasFixed", compare if it is in the old one
                if(newAllData.current[myClass][arrayName][index].wasFixed && !allData[myClass][arrayName][index].wasFixed){
                   typeOfSendFile = (newAllData.current[myClass][arrayName][index].typeFixed == "talk") ? "gradeTalkFixed" : "gradeWrittenFixed"
                   if(newAllData.current[myClass][arrayName][index].wasFixed == "written") dataToSend = {"aboutTestFixed": newAllData.current[myClass][arrayName][index].aboutTestFixed}
@@ -197,6 +201,7 @@ export default function Grades() {
                }
             }
          }
+         setDisplayPopup(false)
       }
       else if (confirm("Do you want to leave without saving?")) {
          console.log("'newAllData' set to 'allData' on discardAll")
@@ -204,12 +209,14 @@ export default function Grades() {
             ...make_a_deep_copy(allData)
          }
       }
-      setDisplayPopup(false)
+      else {
+         setDisplayPopup(false)
+      }
    }
 
 
    function changeNewData(event, myClass, arrayName, index) {
-      //_console.log("changing data:", event.target.name)      
+      //_console.log("changing data:", event.target.name)
       //_console.log("changing data value:", event.target.value)
       if (event.target.name.includes("delete")) {
          let sendData
@@ -519,23 +526,28 @@ export default function Grades() {
             allClassData={newAllData.current[individualClass]}
             myClass={individualClass}
             popupFunction={popupHandle}
+            displaySettings={gradesRelevantSettings}
+            isMobile={isMobile}
          />
       })
    }
    // final export
+   if(!gradesRelevantSettings || !allClasses || !allData){
+      return <div>Loading data...</div>
+   }
    return (<>
-      <table>
+      <table className="mainGradesTable">
          <tr>
-            <th>Class</th>
-            <th>Name</th>
-            <th>Plus / minus</th>
-            <th>Homework</th>
-            <th>Grades 1</th>
-            <th>Grades 2</th>
-            <th>Small grades</th>
-            <th>Fixing</th>
-            <th>Final grades</th>
-            <th>Final grade</th>
+            {gradesRelevantSettings.class && <th className="grades-Class">Class</th>}
+            {gradesRelevantSettings.teacherName && <th className="grades-Name">Name</th>}
+            {gradesRelevantSettings.plusMinus && <th className="grades-PlusMinus">Plus / minus</th>}
+            {gradesRelevantSettings.homework && <th className="grades-Homework">Homework</th>}
+            {gradesRelevantSettings.grades && <th className={gradesRelevantSettings.gradesSingle ? "grades-Grades" : "grades-GradesHalf"}>Grades {!gradesRelevantSettings.gradesSingle &&  " 1"}</th>}
+            {!gradesRelevantSettings.gradesSingle && <th className="grades-GradesHalf">Grades 2</th>}
+            {gradesRelevantSettings.smallGrades && <th className="grades-SmallGrades">Small grades</th>}
+            {gradesRelevantSettings.fixing && <th className="grades-Fixing">Fixing</th>}
+            {(gradesRelevantSettings.estimation || gradesRelevantSettings.computerEstimation) && <th className="grades-FinalGrades">Final grades</th>}
+            {gradesRelevantSettings.finalGrade && <th className="grades-endedGrade">Final grade</th>}
          </tr>
          {allTableRows}
       </table>

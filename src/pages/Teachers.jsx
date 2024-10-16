@@ -3,13 +3,14 @@ import React, { useState, useEffect } from "react"
 import Teachers_tableRow from "../components/Teachers-tableRow"
 import { convertTeacherDataToTeacherObject, convertIndividualTeacherObjectToTeacherData } from "../functions/convertTeacherData"
 import {createSendFile, make_a_deep_copy} from "../functions/_generalFunctions"
-import {API_grades, API_allClasses} from "../../my_variables.json"
 import TeacherPopup_name from "../components/TeacherPopup/name"
 import TeacherPopup_homework from "../components/TeacherPopup/homework"
 import TeacherPopup_percent from "../components/TeacherPopup/percent"
 import TeacherPopup_ignoreFixedGrades from "../components/TeacherPopup/ignoreFixedGrades"
 import TeacherPopup_smallGrades from "../components/TeacherPopup/smallGrade"
 import TeacherPopup_plusMinus from "../components/TeacherPopup/plusMinus"
+const API_grades = import.meta.env.VITE_API_grades
+const API_allClasses = import.meta.env.VITE_API_allClasses
 
 function popupRouter(myClass, popupName, teachersObject, changeTeacherObjectFunction, closePopupFunction) {
    switch (popupName) {
@@ -27,13 +28,14 @@ function popupRouter(myClass, popupName, teachersObject, changeTeacherObjectFunc
          return <TeacherPopup_plusMinus aboutTeacher={teachersObject[myClass]} myClass={myClass} changeTeacherObject={changeTeacherObjectFunction} closePopupFunction={closePopupFunction} />
    }
 }
-export default function Teachers() {
+export default function Teachers({isMobile, settings}) {
    const [allClasses, setAllClasses] = useState([])
    const [aboutTeacherObject, setAboutTeacherObject] = useState({})
    const [popupElement, setPopupElement] = useState()
    const [displayPopup, setDisplayPopup] = useState(false)
    const popupEventListener = React.useRef(false)
    const newTeacherObjectRef = React.useRef({})
+   const teacherRelevantSettings = settings[`display${isMobile ? "Mobile" : "Desktop"}`].displayTeacher
 
    useEffect(() => {
       Promise.all([
@@ -60,11 +62,8 @@ export default function Teachers() {
             }, 200)
          }
       }
-      if (displayPopup) {
-         document.addEventListener('keydown', handleKeyDown)
-      } else {
-         document.removeEventListener('keydown', handleKeyDown)
-      }
+      if (displayPopup) document.addEventListener('keydown', handleKeyDown)
+      else document.removeEventListener('keydown', handleKeyDown)
       return () => {
          enterKeyPressed = false
       }
@@ -116,7 +115,7 @@ export default function Teachers() {
    function setNewTeacherObject(event, myClass) {
       const updatedTeacher = {
          ...newTeacherObjectRef.current[myClass],
-         [event.target.name]: event.target.value
+         [event.target.name]: event.target.name.includes("Effect") ?event.target.value/100 : event.target.value
       }
       newTeacherObjectRef.current = {
          ...newTeacherObjectRef.current,
@@ -135,19 +134,23 @@ export default function Teachers() {
          teacherObject={aboutTeacherObject[myClass]}
          myClass={myClass}
          popupFunction={popupHandle}
+         settings={teacherRelevantSettings}
       />
    })
+   if(!settings || !allClasses || !aboutTeacherObject){
+      return <div>Loading data...</div>
+   }
    return (
       <>
          <table>
             <tr>
-               <th>Name</th>
-               <th>Class</th>
-               <th>Homework</th>
-               <th>Percent</th>
-               <th>Ignore fixed grades</th>
-               <th>Small grades</th>
-               <th>Plus minus</th>
+               {teacherRelevantSettings.name && <th>Name</th>}
+               {teacherRelevantSettings.class && <th>Class</th>}
+               {teacherRelevantSettings.homework && <th>Homework</th>}
+               {teacherRelevantSettings.percent && <th>Percent</th>}
+               {teacherRelevantSettings.ignoresFixedGrades && <th>Ignore fixed grades</th>}
+               {teacherRelevantSettings.smallGrades && <th>Small grades</th>}
+               {teacherRelevantSettings.plusMinus && <th>Plus minus</th>}
             </tr>
             {allTableRows}
          </table>

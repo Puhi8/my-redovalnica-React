@@ -1,0 +1,9 @@
+.selectDevice{
+   display: flex;
+   width: fit-content;
+   justify-content: space-around;
+}
+.selectDevice > label{
+   margin-top: auto;
+   margin-bottom: auto;
+}

@@ -1,9 +1,10 @@
-import React from "react"; React
+import React from "react"
+import ItemDisplaySettings from "../components/Settings-displayItems"
 
-export default function Settings(){
+export default function Settings({settings, isMobile}){
    return(
       <>
-         <h1>This is: Settings</h1>
+         <ItemDisplaySettings settings={settings} isMobile={isMobile}/>
       </>
    )
 }

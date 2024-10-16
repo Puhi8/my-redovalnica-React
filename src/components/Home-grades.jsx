@@ -6,7 +6,9 @@ import React from "react"
 import Home_GradesTable_desktop from "./Home-gradesTable-desktop"
 import Home_GradesTable_mobile from "./Home-gradesTable-mobile"
 import { Link } from "react-router-dom"
-import {API_grades, API_allClasses} from "../../my_variables.json"
+const API_grades = import.meta.env.VITE_API_grades
+const API_allClasses = import.meta.env.VITE_API_allClasses
+
 export default function Home_Grades({ isMobile }) {
    let device = isMobile ? "Mobile" : "Computer"
    const [endOfYear, setEndOfYear] = React.useState(false)

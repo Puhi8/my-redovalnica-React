@@ -13,8 +13,10 @@ function endGrade(myClass) {
    const doPercent = Boolean(myClass.teacher.endsByPercents)
    const doIgnoreFixedGrade = Boolean(myClass.teacher.ignoresFixedGrades)
    const doPlusMinus = Boolean(myClass.teacher.convertPluses)
-   const doSmallGrades = Boolean(myClass.teacher.numberOfSmallGrades)
+   const doSmallGrades = Boolean(myClass.teacher.convertSmallGrades)
 
+   //_console.log(myClass.teacher.name, doHomework, doPercent, doIgnoreFixedGrade, doPlusMinus, doSmallGrades);
+   
    let roundUp = undefined
    roundUpReason = ""
    function finalRound(grade, roundUp, smallGrade) {
@@ -44,7 +46,7 @@ function endGrade(myClass) {
       }
       else {
          for (let i = 0; i + numberOfHomeworks < numberOfHomeworksNotDone; i += numberOfHomeworks) {
-            extraGrades.push(Number(gradeToGiveText))
+            extraGrades.push({ grade: Number(gradeToGiveText), effect: 1 })
          }
       }
    }
@@ -67,7 +69,7 @@ function endGrade(myClass) {
          allPossibilities.forEach(gradeSpecification => {
             let [type, grade, numberOfNeededItems] = gradeSpecification.split(":")
             while (Number(numberOfNeededItems) > numberOfAllItemsObject[type]) {
-               extraGrades.push(Number(grade))
+               extraGrades.push({ grade: Number(grade), effect: 1 })
                numberOfAllItemsObject -= numberOfNeededItems
             }
          })
@@ -85,13 +87,14 @@ function endGrade(myClass) {
          smallGradeFinalGrade = Math.round(sumOfSmallGrades / numberOfSmallGrades)
       }
       else {
-         const numberOfSmallGradesConverted = myClass.teacher.convertSmallGrades
-         for (let i = 0; i + numberOfSmallGradesConverted < myClass.smallGrades.length; i += numberOfSmallGradesConverted) {
-            let allSmallGradesGrade
+         const numberOfSmallGradesConverted = Number(myClass.teacher.convertSmallGrades.split("-")[0])
+         const smallGradeEffect = Number(myClass.teacher.convertSmallGrades.split("-")[1])             
+         for (let i = 0; i + numberOfSmallGradesConverted < myClass.smallGrade.length; i += numberOfSmallGradesConverted) {
+            let allSmallGradesGrade = 0
             for (let j = 0; j < numberOfSmallGradesConverted; j++) {
-               allSmallGradesGrade += myClass.smallGrades[i + j]
+               allSmallGradesGrade += Number(myClass.smallGrade[i + j].grade)               
             }
-            extraGrades.push(allSmallGradesGrade / numberOfSmallGradesConverted)
+            extraGrades.push({ grade: Number(allSmallGradesGrade / numberOfSmallGradesConverted), effect: (smallGradeEffect || 1) })
          }
       }
    }
@@ -114,7 +117,7 @@ function endGrade(myClass) {
       let numberOfGrades = 0
       let allPercent = 0
       myClass.grades.forEach((grade) => {
-         switch(grade.type){
+         switch (grade.type) {
             case "written":
                if (grade.wasFixed) allPercent += anyPercentToNumber(grade.aboutTestFixed.percent)
                if (!grade.wasFixed && !doIgnoreFixedGrade) allPercent += anyPercentToNumber(grade.aboutTest.percent)
@@ -127,7 +130,7 @@ function endGrade(myClass) {
       })
       extraGrades.forEach(extraGrade => {
          numberOfGrades++
-         allPercent += getPercentFromGrade.get(extraGrade)
+         allPercent += getPercentFromGrade.get(extraGrade.grade)
       })
       return getGradeFromPercent(allPercent / numberOfGrades)
    }
@@ -145,9 +148,11 @@ function endGrade(myClass) {
          numberOfGrades += effectivePercent
       }
    })
+   //_console.log(extraGrades);
+   
    extraGrades.forEach(extraGrade => {
-      sumOfGrades += extraGrade
-      numberOfGrades++
+      sumOfGrades += extraGrade.grade * extraGrade.effect
+      numberOfGrades += extraGrade.effect
    })
    return finalRound(sumOfGrades / numberOfGrades, roundUp, smallGradeFinalGrade)
 }

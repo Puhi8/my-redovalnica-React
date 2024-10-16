@@ -1,3 +1,4 @@
+import { anyPercentToNumber } from "./_generalFunctions"
 const aboutTeacher = {
    "name": null,
    "homeworkState": "none",
@@ -70,7 +71,10 @@ function convertTeacherDataToTeacherObject(allData, allClasses) {
       //set "small grade"
       if (aboutCourantTeacher.convertSmallGrades) {
          if (aboutCourantTeacher.convertSmallGrades == true) teacherObject[myClass] = {...teacherObject[myClass], "smallGradeState":"round"}
-         else teacherObject[myClass] = {...teacherObject[myClass], "smallGradeState":"convert", "smallGradeConvertNumber":aboutCourantTeacher.convertSmallGrades}
+         else {
+            const [numberOfSmallGradesToConvert, smallGradeEffect] = aboutCourantTeacher.convertSmallGrades.split("-")
+            teacherObject[myClass] = {...teacherObject[myClass], "smallGradeState":"convert", "smallGradeConvertNumber":numberOfSmallGradesToConvert , "smallGradeConvertEffect":Number(smallGradeEffect || 1)}
+         }
       }
       else teacherObject[myClass] = {...teacherObject[myClass], "smallGradeState": "none"}
    }))
@@ -100,10 +104,10 @@ function convertIndividualTeacherObjectToTeacherData(teacherObject) {
       "endsByPercents": (teacherObject.percentState == "true" || teacherObject.percentState == true),
       "ignoresFixedGrades": (teacherObject.ignoreState == "true" || teacherObject.ignoreState == true)
    }
-   //set small "grades"
+   //set "small grades"
    if (teacherObject.smallGradeState != "none") {
       if (teacherObject.smallGradeState == "round") teacherData = {...teacherData, "convertSmallGrades": true}
-      else teacherData={...teacherData, "convertSmallGrades": teacherObject.smallGradeConvertNumber}
+      else teacherData={...teacherData, "convertSmallGrades": `${teacherObject.smallGradeConvertNumber}-${(anyPercentToNumber(teacherObject.smallGradeConvertEffect) || 1)}`}
    }
    else teacherData = {...teacherData, "convertSmallGrades": false}
    //set "pluses and minuses"

@@ -101,7 +101,9 @@ export default function GradesPopup_Grade({ myClass, index, myClassData, closePo
          <h4>Original grade ({currantGrade.grade})</h4>
          <label>Effectiveness</label>
          <input 
+            onChange={(e)=>{changeNewData(e, myClass, "grades" ,index)}}
             defaultValue={anyPercentToNumber(currantGrade.effective) * 100} 
+            name="effective"
             placeholder="In: %" 
             type="number" 
             min={0} 
